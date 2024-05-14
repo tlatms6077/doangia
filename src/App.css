@@ -1,0 +1,79 @@
+@import '../src/css/react-big-calendar.css';
+@import '../src/css/Timeline.css';
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.status-cell {
+  display: flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.status-blue .status-dot{
+  background:rgb(91, 151, 189)
+}
+.status-blue {
+  background-color: rgb(211, 229, 239);
+}
+.status-gray .status-dot {
+  background-color: rgb(145, 145, 142);
+}
+.status-gray {
+  background-color: rgb(227, 226, 224);
+}
+.status-red {
+  background-color: rgb(255, 226, 221);
+}
+.status-green {
+  background-color: rgb(219, 237, 219);
+}
+
+/* 추가적인 상태 색상 스타일을 여기에 추가할 수 있습니다. */
+
+
+/* 추가적인 상태 색상 스타일을 여기에 추가할 수 있습니다. */
+
