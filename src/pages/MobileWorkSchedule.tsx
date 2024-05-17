@@ -13,6 +13,7 @@ import { styled } from '@mui/system';
 
 moment.locale('vi'); // 기본 로캘을 베트남어로 설정
 const localizer = momentLocalizer(moment);
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:4000/api/notion-data';
 
 const CustomToolbar: React.FC<ToolbarProps> = ({ label, onNavigate, onView }) => {
   return (
@@ -68,10 +69,10 @@ const MobileWorkSchedule: React.FC = () => {
   };
   const fetchData = useCallback(async () => {
     try {
-      const response = await axios.post('http://localhost:4000/api/notion-data', { email });
+      const response = await axios.post(API_URL, { email });
       setData(response.data.results);
-      setError(null); // Clear any previous error
-      setIsLoggedIn(true); // Only log in if data fetch is successful
+      setError(null);
+      setIsLoggedIn(true);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         if (error.response.status === 404) {
@@ -82,7 +83,7 @@ const MobileWorkSchedule: React.FC = () => {
       } else {
         setError('데이터를 가져오는 중 오류가 발생했습니다.');
       }
-      setIsLoggedIn(false); // Keep user logged out if there is an error
+      setIsLoggedIn(false);
     }
   }, [email]);
 
