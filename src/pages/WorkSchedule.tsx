@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, ButtonGroup, Button } from '@mui/material';
-import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import { Calendar, momentLocalizer,  } from 'react-big-calendar';
 import moment from 'moment';
 import Timeline from 'react-calendar-timeline';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -166,7 +166,6 @@ const WorkSchedule: React.FC = () => {
 
   return (
     <div>
-      <h1>Work Schedule</h1>
       <ButtonGroup variant="contained">
         <Button onClick={() => setView('list')}>리스트형</Button>
         <Button onClick={() => setView('calendar')}>달력형</Button>

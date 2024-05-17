@@ -54,22 +54,22 @@
   margin-right: 8px;
 }
 .status-blue .status-dot{
-  background:rgb(91, 151, 189)
+  background:rgb(91, 151, 189) !important
 }
 .status-blue {
-  background-color: rgb(211, 229, 239);
+  background-color: rgb(211, 229, 239) !important;
 }
 .status-gray .status-dot {
-  background-color: rgb(145, 145, 142);
+  background-color: rgb(145, 145, 142) !important;
 }
 .status-gray {
-  background-color: rgb(227, 226, 224);
+  background-color: rgb(227, 226, 224) !important;
 }
 .status-red {
-  background-color: rgb(255, 226, 221);
+  background-color: rgb(255, 226, 221) !important;
 }
 .status-green {
-  background-color: rgb(219, 237, 219);
+  background-color: rgb(219, 237, 219) !important;
 }
 
 /* 추가적인 상태 색상 스타일을 여기에 추가할 수 있습니다. */

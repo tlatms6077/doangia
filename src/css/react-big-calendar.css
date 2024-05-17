@@ -1,0 +1,35 @@
+/* 캘린더 기본 스타일 조정 */
+.rbc-calendar {
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* 이벤트 스타일 */
+  .rbc-event {
+    background-color: #44c767; /* 이벤트 배경색 */
+    color: white; /* 텍스트 색상 */
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+  }
+  
+  /* 캘린더 헤더 스타일 */
+  .rbc-toolbar {
+    margin-bottom: 10px;
+  }
+  
+  .rbc-btn-group button {
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 0.875rem;
+    border: 1px solid #ccc;
+  }
+  
+  /* 모바일 뷰 최적화 */
+  @media (max-width: 600px) {
+    .rbc-event {
+      font-size: 0.75rem; /* 모바일에서는 폰트 크기 감소 */
+    }
+  }
+  
