@@ -1,59 +1,72 @@
-/* eslint-disable no-restricted-globals */
+// public/service-worker.js
 
-// This is the "Offline page" service worker
+const CACHE_NAME = 'my-cache-v1';
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/static/js/bundle.js',
+  '/static/js/main.chunk.js',
+  '/static/js/0.chunk.js',
+  '/manifest.json',
+  '/favicon.ico',
+  // 추가적으로 캐시할 파일들을 여기에 나열
+];
 
-const CACHE_NAME = "offline-page";
-const OFFLINE_URL = "offline.html";
-
-// Install stage sets up the offline page in the cache and opens a new cache
-self.addEventListener("install", function (event) {
-  console.log("[ServiceWorker] Install");
-
+self.addEventListener('install', (event) => {
+  // Perform install steps
   event.waitUntil(
-    (async () => {
-      const cache = await caches.open(CACHE_NAME);
-      console.log("[ServiceWorker] Caching offline page");
-      await cache.add(new Request(OFFLINE_URL, { cache: "reload" }));
-    })()
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
   );
-  self.skipWaiting();
 });
 
-// If any fetch fails, it will show the offline page.
-self.addEventListener("fetch", function (event) {
-  if (event.request.mode === "navigate") {
-    event.respondWith(
-      (async () => {
-        try {
-          const preloadResponse = await event.preloadResponse;
-          if (preloadResponse) {
-            return preloadResponse;
+self.addEventListener('activate', (event) => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
           }
-
-          const networkResponse = await fetch(event.request);
-          return networkResponse;
-        } catch (error) {
-          console.log("[ServiceWorker] Fetch failed; returning offline page instead.", error);
-
-          const cache = await caches.open(CACHE_NAME);
-          const cachedResponse = await cache.match(OFFLINE_URL);
-          return cachedResponse;
-        }
-      })()
-    );
-  }
+        })
+      );
+    })
+  );
 });
 
-// Update the service worker
-self.addEventListener("activate", (event) => {
-  console.log("[ServiceWorker] Activate");
-  event.waitUntil(
-    (async () => {
-      if ("navigationPreload" in self.registration) {
-        await self.registration.navigationPreload.enable();
-      }
-    })()
-  );
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+        return fetch(event.request).then(
+          (response) => {
+            // Check if we received a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
 
-  self.clients.claim();
+            // IMPORTANT: Clone the response. A response is a stream
+            // and because we want the browser to consume the response
+            // as well as the cache consuming the response, we need
+            // to clone it so we have two streams.
+            const responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
+      })
+  );
 });
