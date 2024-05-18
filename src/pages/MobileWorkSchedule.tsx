@@ -5,13 +5,13 @@ import moment from 'moment';
 import { useSwipeable } from 'react-swipeable';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'react-calendar/dist/Calendar.css';
-import 'moment/locale/vi'; // 베트남어 로캘 추가
-import '../css/MobileWorkSchedule.css'; // 모바일 스타일링을 위한 CSS 파일 추가
+import 'moment/locale/vi';
+import '../css/MobileWorkSchedule.css';
 import '../css/react-big-calendar.css';
 import axios from 'axios';
 import { styled } from '@mui/system';
 
-moment.locale('vi'); // 기본 로캘을 베트남어로 설정
+moment.locale('vi');
 const localizer = momentLocalizer(moment);
 
 const CustomToolbar: React.FC<ToolbarProps> = ({ label, onNavigate, onView }) => {
@@ -66,9 +66,14 @@ const MobileWorkSchedule: React.FC = () => {
   const handleEmailSubmit = () => {
     fetchData();
   };
+
   const fetchData = useCallback(async () => {
+    const apiUrl = (process.env.NODE_ENV === 'production'
+      ? process.env.REACT_APP_API_URL_PRODUCTION
+      : process.env.REACT_APP_API_URL) || 'http://localhost:4000/api/notion-data';
+
     try {
-      const response = await axios.post('http://localhost:4000/api/notion-data', { email });
+      const response = await axios.post(apiUrl, { email });
       setData(response.data.results);
       setError(null); // Clear any previous error
       setIsLoggedIn(true); // Only log in if data fetch is successful
