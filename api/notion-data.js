@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 module.exports = async (req, res) => {
+  console.log("Received request:", req.body); // 로그 추가
   const { email } = req.body;
   const NOTION_API_URL = `https://api.notion.com/v1/databases/${process.env.NOTION_DATABASE_ID}/query`;
   const NOTION_API_KEY = process.env.NOTION_KEY;
@@ -13,6 +14,8 @@ module.exports = async (req, res) => {
         'Notion-Version': '2022-06-28'
       }
     });
+
+    console.log("Notion API response:", response.data); // 로그 추가
 
     const filteredResults = response.data.results.filter(item => {
       const people = item.properties['사람']?.people || [];
