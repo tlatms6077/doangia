@@ -19,10 +19,10 @@ const CustomToolbar: React.FC<ToolbarProps> = ({ label, onNavigate, onView }) =>
     <div className="rbc-toolbar">
       <span className="rbc-toolbar-label">{label}</span>
       <span className="rbc-btn-group">
-      <button type="button" onClick={() => onNavigate('TODAY')}>Today</button> 
-      <button type="button" onClick={() => onView('day')}>Day</button>
-      <button type="button" onClick={() => onView('week')}>Week</button>
-      <button type="button" onClick={() => onView('month')}>Month</button>
+        <button type="button" onClick={() => onNavigate('TODAY')}>Today</button>
+        <button type="button" onClick={() => onView('day')}>Day</button>
+        <button type="button" onClick={() => onView('week')}>Week</button>
+        <button type="button" onClick={() => onView('month')}>Month</button>
       </span>
     </div>
   );
@@ -63,14 +63,22 @@ const MobileWorkSchedule: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const apiUrl = process.env.NODE_ENV === 'production'
+    ? process.env.REACT_APP_API_URL_PRODUCTION
+    : process.env.REACT_APP_API_URL;
+
+  console.log("Using API URL:", apiUrl);
+
   const handleEmailSubmit = () => {
     fetchData();
   };
 
   const fetchData = useCallback(async () => {
-    const apiUrl = (process.env.NODE_ENV === 'production'
-      ? process.env.REACT_APP_API_URL_PRODUCTION
-      : process.env.REACT_APP_API_URL) || 'http://localhost:4000/api/notion-data';
+    if (!apiUrl) {
+      setError('API URL is not defined.');
+      return;
+    }
 
     try {
       const response = await axios.post(apiUrl, { email });
@@ -89,7 +97,7 @@ const MobileWorkSchedule: React.FC = () => {
       }
       setIsLoggedIn(false); // Keep user logged out if there is an error
     }
-  }, [email]);
+  }, [email, apiUrl]);
 
   useEffect(() => {
     if (isLoggedIn) {
