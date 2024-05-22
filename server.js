@@ -6,7 +6,11 @@ require('dotenv').config();
 const app = express();
 const port = 4000;
 
-app.use(cors());
+// 모든 도메인에서의 요청을 허용하도록 설정
+app.use(cors({
+    origin: '*'
+}));
+
 app.use(express.json()); // JSON 바디 파싱을 위해 추가
 
 const NOTION_API_URL = `https://api.notion.com/v1/databases/${process.env.NOTION_DATABASE_ID}/query`;
