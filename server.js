@@ -6,19 +6,24 @@ require('dotenv').config();
 const app = express();
 const port = 4000;
 
-// 특정 출처에서의 요청을 허용하도록 CORS 설정
+// CORS 설정: 특정 출처 허용
 app.use(cors({
     origin: 'https://tlatms6077.github.io',
-    optionsSuccessStatus: 200 // 일부 브라우저에서 옵션 요청에 대한 성공 상태를 설정합니다.
+    optionsSuccessStatus: 200
 }));
 
-app.use(express.json()); // JSON 바디 파싱을 위해 추가
+// JSON 바디 파싱을 위해 미들웨어 추가
+app.use(express.json());
 
 const NOTION_API_URL = `https://api.notion.com/v1/databases/${process.env.NOTION_DATABASE_ID}/query`;
 const NOTION_API_KEY = process.env.NOTION_KEY;
 
 app.post('/api/notion-data', async (req, res) => {
     const userEmail = req.body.email; // 클라이언트에서 전송된 이메일 주소
+    if (!userEmail) {
+        return res.status(400).json({ error: 'Email is required' });
+    }
+
     try {
         const response = await axios.post(NOTION_API_URL, {}, {
             headers: {
@@ -34,7 +39,7 @@ app.post('/api/notion-data', async (req, res) => {
         });
 
         if (filteredResults.length === 0) {
-            return res.status(404).json({ error: '잘못된 이메일입니다. 다시 입력해주세요.' });
+            return res.status(404).json({ error: 'Invalid email. Please try again.' });
         }
 
         console.log('Filtered Data:', filteredResults);  // 필터링된 데이터를 로그에 출력
