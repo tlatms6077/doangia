@@ -6,9 +6,10 @@ require('dotenv').config();
 const app = express();
 const port = 4000;
 
-// 모든 도메인에서의 요청을 허용하도록 설정
+// 특정 출처에서의 요청을 허용하도록 CORS 설정
 app.use(cors({
-    origin: '*'
+    origin: 'https://tlatms6077.github.io',
+    optionsSuccessStatus: 200 // 일부 브라우저에서 옵션 요청에 대한 성공 상태를 설정합니다.
 }));
 
 app.use(express.json()); // JSON 바디 파싱을 위해 추가
