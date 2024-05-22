@@ -1,18 +1,26 @@
-const express = require('express');
 const axios = require('axios');
-const cors = require('cors');
-require('dotenv').config();
 
-const app = express();
+module.exports = async (req, res) => {
+    // JSON 본문을 안전하게 파싱
+    let body;
+    try {
+        body = req.body;
+        if (typeof body === 'string') {
+            body = JSON.parse(body); // 요청 본문이 문자열로 오는 경우, JSON으로 파싱
+        }
+    } catch (error) {
+        console.error('Error parsing request body:', error);
+        return res.status(400).json({ error: 'Bad request, invalid JSON' });
+    }
 
-app.use(cors());
-app.use(express.json()); // JSON 바디 파싱을 위해 추가
+    const userEmail = body.email;
+    if (!userEmail) {
+        return res.status(400).json({ error: 'Email is required' });
+    }
 
-const NOTION_API_URL = `https://api.notion.com/v1/databases/${process.env.NOTION_DATABASE_ID}/query`;
-const NOTION_API_KEY = process.env.NOTION_KEY;
-
-app.post('/api/notion-data', async (req, res) => {
-    const userEmail = req.body.email; // 클라이언트에서 전송된 이메일 주소
+    // Notion API 요청
+    const NOTION_API_URL = `https://api.notion.com/v1/databases/${process.env.NOTION_DATABASE_ID}/query`;
+    const NOTION_API_KEY = process.env.NOTION_KEY;
     try {
         const response = await axios.post(NOTION_API_URL, {}, {
             headers: {
@@ -28,13 +36,12 @@ app.post('/api/notion-data', async (req, res) => {
         });
 
         if (filteredResults.length === 0) {
-            return res.status(404).json({ error: '잘못된 이메일입니다. 다시 입력해주세요.' });
+            return res.status(404).json({ error: 'No matching records found.' });
         }
 
-        console.log('Filtered Data:', filteredResults);  // 필터링된 데이터를 로그에 출력
-        res.json({ results: filteredResults });
+        res.status(200).json({ results: filteredResults });
     } catch (error) {
-        console.error('Error fetching data from Notion API:', error.response ? error.response.data : error.message);
-        res.status(500).json({ error: error.message });
+        console.error('Error fetching data from Notion API:', error);
+        res.status(500).json({ error: error.message || 'Error fetching data from Notion.' });
     }
-});
+};
