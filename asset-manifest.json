@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "https://tlatms6077.github.io/doangia/static/css/main.39819979.css",
+    "main.js": "https://tlatms6077.github.io/doangia/static/js/main.e678fc74.js",
+    "index.html": "https://tlatms6077.github.io/doangia/index.html",
+    "main.39819979.css.map": "https://tlatms6077.github.io/doangia/static/css/main.39819979.css.map",
+    "main.e678fc74.js.map": "https://tlatms6077.github.io/doangia/static/js/main.e678fc74.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.39819979.css",
+    "static/js/main.e678fc74.js"
+  ]
+}
