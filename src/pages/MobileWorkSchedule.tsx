@@ -63,25 +63,18 @@ const MobileWorkSchedule: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
-  const apiUrl = process.env.NODE_ENV === 'production'
-    ? process.env.REACT_APP_API_URL_PRODUCTION
-    : process.env.REACT_APP_API_URL;
-
-  console.log("Using API URL:", apiUrl);
 
   const handleEmailSubmit = () => {
     fetchData();
   };
 
   const fetchData = useCallback(async () => {
-    if (!apiUrl) {
-      setError('API URL is not defined.');
-      return;
-    }
+    const apiUrl = process.env.NODE_ENV === 'production' 
+      ? process.env.REACT_APP_API_URL_PRODUCTION 
+      : process.env.REACT_APP_API_URL;
 
     try {
-      const response = await axios.post(apiUrl, { email });
+      const response = await axios.post(apiUrl!, { email });
       setData(response.data.results);
       setError(null); // Clear any previous error
       setIsLoggedIn(true); // Only log in if data fetch is successful
@@ -97,7 +90,7 @@ const MobileWorkSchedule: React.FC = () => {
       }
       setIsLoggedIn(false); // Keep user logged out if there is an error
     }
-  }, [email, apiUrl]);
+  }, [email]);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -198,4 +191,5 @@ const MobileWorkSchedule: React.FC = () => {
 };
 
 export default MobileWorkSchedule;
+
 
