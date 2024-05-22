@@ -9,11 +9,16 @@ const port = 4000;
 // CORS 설정: 특정 출처 허용
 app.use(cors({
     origin: 'https://tlatms6077.github.io',
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     optionsSuccessStatus: 200
 }));
 
 // JSON 바디 파싱을 위해 미들웨어 추가
 app.use(express.json());
+
+// OPTIONS 요청에 대한 처리 추가
+app.options('/api/notion-data', cors());
 
 const NOTION_API_URL = `https://api.notion.com/v1/databases/${process.env.NOTION_DATABASE_ID}/query`;
 const NOTION_API_KEY = process.env.NOTION_KEY;
