@@ -19,8 +19,8 @@ const NOTION_API_URL = `https://api.notion.com/v1/databases/${process.env.NOTION
 const NOTION_API_KEY = process.env.NOTION_KEY;
 
 app.post('/api/notion-data', async (req, res) => {
-    const userEmail = req.body.email; // 클라이언트에서 전송된 이메일 주소
-    if (!userEmail) {
+    const { email } = req.body; // 클라이언트에서 전송된 이메일 주소
+    if (!email) {
         return res.status(400).json({ error: 'Email is required' });
     }
 
@@ -35,7 +35,7 @@ app.post('/api/notion-data', async (req, res) => {
 
         const filteredResults = response.data.results.filter(item => {
             const people = item.properties['사람']?.people || [];
-            return people.some(person => person.person.email === userEmail);
+            return people.some(person => person.person.email === email);
         });
 
         if (filteredResults.length === 0) {
