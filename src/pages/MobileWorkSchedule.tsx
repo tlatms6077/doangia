@@ -191,5 +191,3 @@ const MobileWorkSchedule: React.FC = () => {
 };
 
 export default MobileWorkSchedule;
-
-
