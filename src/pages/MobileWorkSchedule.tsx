@@ -72,13 +72,6 @@ const MobileWorkSchedule: React.FC = () => {
     const apiUrl = process.env.NODE_ENV === 'production' 
       ? process.env.REACT_APP_API_URL_PRODUCTION 
       : process.env.REACT_APP_API_URL;
-
-    console.log('Environment Variables:');
-    console.log('NODE_ENV:', process.env.NODE_ENV);
-    console.log('REACT_APP_API_URL:', process.env.REACT_APP_API_URL);
-    console.log('REACT_APP_API_URL_PRODUCTION:', process.env.REACT_APP_API_URL_PRODUCTION);
-    console.log('Using API URL:', apiUrl);
-
     try {
       const response = await axios.post(apiUrl!, { email });
       setData(response.data.results);
