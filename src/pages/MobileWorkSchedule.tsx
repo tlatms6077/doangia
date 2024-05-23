@@ -63,17 +63,27 @@ const MobileWorkSchedule: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // 중복 요청 방지용 상태
 
   const handleEmailSubmit = () => {
-    fetchData();
+    if (!loading) {
+      fetchData();
+    }
   };
 
   const fetchData = useCallback(async () => {
+    setLoading(true);
     const apiUrl = process.env.NODE_ENV === 'production' 
       ? process.env.REACT_APP_API_URL_PRODUCTION 
       : process.env.REACT_APP_API_URL;
+    if (!apiUrl) {
+      setError('API URL이 설정되지 않았습니다.');
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await axios.post(apiUrl!, { email });
+      const response = await axios.post(apiUrl, { email });
       setData(response.data.results);
       setError(null); // Clear any previous error
       setIsLoggedIn(true); // Only log in if data fetch is successful
@@ -88,6 +98,8 @@ const MobileWorkSchedule: React.FC = () => {
         setError('데이터를 가져오는 중 오류가 발생했습니다.');
       }
       setIsLoggedIn(false); // Keep user logged out if there is an error
+    } finally {
+      setLoading(false); // 요청 완료 후 로딩 상태 해제
     }
   }, [email]);
 
@@ -170,7 +182,7 @@ const MobileWorkSchedule: React.FC = () => {
               variant="contained"
               style={{ backgroundColor: '#3F3A77', color: '#FFF' }}
               fullWidth
-              disabled={!email.trim()} // 이메일이 공백일 때 버튼 비활성화
+              disabled={!email.trim() || loading} // 이메일이 공백이거나 로딩 중일 때 버튼 비활성화
             >
               로그인
             </StyledButton>
@@ -190,3 +202,4 @@ const MobileWorkSchedule: React.FC = () => {
 };
 
 export default MobileWorkSchedule;
+
