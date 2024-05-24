@@ -44,6 +44,21 @@ const messages = {
   showMore: (total: number) => `+ thêm ${total}`,
 };
 
+const customFormats = {
+  dayHeaderFormat: (date: Date, culture?: string, localizer?: any) =>
+    localizer.format(date, 'dddd', culture) + ' / ' + localizer.format(date, 'DD', culture), // 요일 / 일
+
+  dayRangeHeaderFormat: ({ start, end }: { start: Date; end: Date }, culture?: string, localizer?: any) => {
+    let startFormat = localizer.format(start, 'DD', culture);
+    let endFormat = localizer.format(end, 'DD', culture);
+    let monthYearFormat = localizer.format(start, 'MMMM', culture);
+    return `${startFormat}-${endFormat} / THÁNG ${monthYearFormat}`; // '13-19 / THÁNG 5'
+  },
+
+  dayFormat: (date: Date, culture?: string, localizer?: any) =>
+    localizer.format(date, 'dd', culture).toUpperCase() + ' / ' + localizer.format(date, 'DD', culture), // 'T2 / 13'
+};
+
 const formatDateTime = (dateTime: string) => {
   return moment(dateTime).format('HH:mm DD/MM/YYYY');
 };
@@ -59,6 +74,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 const MobileWorkSchedule: React.FC = () => {
   const [data, setData] = useState<any>(null);
   const [view, setView] = useState<'calendar' | 'list'>('calendar');
+  const [calendarView, setCalendarView] = useState<'day' | 'week' | 'month'>('month');
   const [date, setDate] = useState(new Date());
   const [email, setEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -85,6 +101,8 @@ const MobileWorkSchedule: React.FC = () => {
     try {
       const response = await axios.post(apiUrl, { email });
       setData(response.data.results);
+            console.log('Fetched data:', response.data); // 데이터를 콘솔에 출력
+
       setError(null); // Clear any previous error
       setIsLoggedIn(true); // Only log in if data fetch is successful
     } catch (error) {
@@ -110,10 +128,37 @@ const MobileWorkSchedule: React.FC = () => {
   }, [isLoggedIn, fetchData]);
 
   const handlers = useSwipeable({
-    onSwipedLeft: () => setDate(new Date(moment(date).add(view === 'calendar' ? 1 : 1, 'month').toISOString())),
-    onSwipedRight: () => setDate(new Date(moment(date).subtract(view === 'calendar' ? 1 : 1, 'month').toISOString())),
+    onSwipedLeft: () => {
+      switch (calendarView) {
+        case 'day':
+          setDate(new Date(moment(date).add(1, 'day').toISOString()));
+          break;
+        case 'week':
+          setDate(new Date(moment(date).add(1, 'week').toISOString()));
+          break;
+        case 'month':
+          setDate(new Date(moment(date).add(1, 'month').toISOString()));
+          break;
+        default:
+          break;
+      }
+    },
+    onSwipedRight: () => {
+      switch (calendarView) {
+        case 'day':
+          setDate(new Date(moment(date).subtract(1, 'day').toISOString()));
+          break;
+        case 'week':
+          setDate(new Date(moment(date).subtract(1, 'week').toISOString()));
+          break;
+        case 'month':
+          setDate(new Date(moment(date).subtract(1, 'month').toISOString()));
+          break;
+        default:
+          break;
+      }
+    },
   });
-
   const renderCalendarView = () => {
     if (!data) return null;
 
@@ -129,6 +174,8 @@ const MobileWorkSchedule: React.FC = () => {
         localizer={localizer}
         events={events}
         views={['day', 'week', 'month']}
+        view={calendarView}
+        onView={(newView) => setCalendarView(newView as 'day' | 'week' | 'month')}
         startAccessor="start"
         endAccessor="end"
         style={{ height: 500 }}
@@ -136,6 +183,8 @@ const MobileWorkSchedule: React.FC = () => {
         date={date}
         onNavigate={(newDate) => setDate(newDate)}
         components={{ toolbar: CustomToolbar }}
+        formats={customFormats}
+
       />
     );
   };
