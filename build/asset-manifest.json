@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "https://tlatms6077.github.io/doangia/static/css/main.39819979.css",
-    "main.js": "https://tlatms6077.github.io/doangia/static/js/main.754016fa.js",
+    "main.js": "https://tlatms6077.github.io/doangia/static/js/main.fefa09a9.js",
     "index.html": "https://tlatms6077.github.io/doangia/index.html",
     "main.39819979.css.map": "https://tlatms6077.github.io/doangia/static/css/main.39819979.css.map",
-    "main.754016fa.js.map": "https://tlatms6077.github.io/doangia/static/js/main.754016fa.js.map"
+    "main.fefa09a9.js.map": "https://tlatms6077.github.io/doangia/static/js/main.fefa09a9.js.map"
   },
   "entrypoints": [
     "static/css/main.39819979.css",
-    "static/js/main.754016fa.js"
+    "static/js/main.fefa09a9.js"
   ]
 }
