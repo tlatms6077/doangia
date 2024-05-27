@@ -199,7 +199,7 @@ const MobileWorkSchedule: React.FC = () => {
             <CardContent>
               <Typography variant="h6">{row.properties?.['업체명']?.title?.[0]?.text?.content ?? ''}</Typography>
               <Typography variant="body2" color="textSecondary">{row.properties?.['담당업무내용']?.rich_text?.[0]?.plain_text ?? ''}</Typography>
-              <Typography variant="body2" color="textSecondary">{formatDateTime(row.properties?.['업무시작일']?.date?.start) ?? ''} - {formatDateTime(row.properties?.['업무종료일']?.date?.end) ?? ''}</Typography>
+              <Typography variant="body2" color="textSecondary">{formatDateTime(row.properties?.['업무시작일']?.date?.start) ?? ''} - {formatDateTime(row.properties?.['업무종료일']?.date?.start) ?? ''}</Typography>
               <Typography variant="body2" color="textSecondary">{row.properties?.['업체연락처']?.rich_text?.[0]?.plain_text ?? ''}</Typography>
               <Chip label={row.properties?.['업무중요도선택']?.select?.name ?? ''} className={`status-${row.properties?.['업무중요도선택']?.select?.color}`} />
             </CardContent>
